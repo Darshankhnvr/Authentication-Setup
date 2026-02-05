@@ -11,16 +11,23 @@ import {
   CardContent,
 } from "../components/ui/card";
 
-// Signup page with validations
+/**
+ * Signup page component.
+ * Features a modern glassmorphic form with validation and entrance animations.
+ * 
+ * @returns {JSX.Element}
+ */
 function Signup() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   // Update form state
   function handleChange(e) {
@@ -38,8 +45,12 @@ function Signup() {
       newErrors.name = "Name must be at least 3 characters";
     }
 
-    if (!form.email.includes("@")) {
-      newErrors.email = "Enter a valid email";
+    if (!form.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    if (!form.phoneNumber.match(/^\d{10,}$/)) {
+      newErrors.phoneNumber = "Enter a valid 10-digit phone number";
     }
 
     if (form.password.length < 6) {
@@ -51,115 +62,132 @@ function Signup() {
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   }
 
   // Submit handler
   async function handleSubmit(e) {
-  e.preventDefault();
+    e.preventDefault();
+    if (!validate()) return;
+    setLoading(true);
 
-  if (!validate()) return;
+    try {
+      const res = await api.post("/api/auth/signup", {
+        name: form.name,
+        email: form.email,
+        phoneNumber: form.phoneNumber,
+        password: form.password
+      });
 
-  try {
-    const res = await api.post("/signup", {
-      name: form.name,
-      email: form.email,
-      password: form.password
-    });
-
-    alert(res.data.message);
-  } catch (err) {
-    alert(err.response?.data?.message || "Signup failed");
+      alert(res.data.message);
+    } catch (err) {
+      alert(err.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-
-      <Card className="w-96 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">
-            Signup
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <Card className="glass w-full max-w-lg p-10 animate-float fade-in">
+        <CardHeader className="space-y-1 pb-8">
+          <CardTitle className="text-3xl font-bold text-center tracking-tight">
+            Create Account
           </CardTitle>
+          <p className="text-center text-foreground/60 text-sm">
+            Join us today and experience the future
+          </p>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Input
+                  label="Full Name"
+                  name="name"
+                  placeholder="John Doe"
+                  value={form.name}
+                  onChange={handleChange}
+                />
+                {errors.name && (
+                  <p className="text-red-400 text-xs ml-1 font-medium">{errors.name}</p>
+                )}
+              </div>
 
-            <div>
-              <Input
-                label="Full Name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-              />
-              {errors.name && (
-                <p className="text-red-500 text-sm">
-                  {errors.name}
-                </p>
-              )}
+              <div className="space-y-2">
+                <Input
+                  label="Email"
+                  type="email"
+                  name="email"
+                  placeholder="john@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                />
+                {errors.email && (
+                  <p className="text-red-400 text-xs ml-1 font-medium">{errors.email}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Input
+                  label="Phone Number"
+                  type="text"
+                  name="phoneNumber"
+                  placeholder="1234567890"
+                  value={form.phoneNumber}
+                  onChange={handleChange}
+                />
+                {errors.phoneNumber && (
+                  <p className="text-red-400 text-xs ml-1 font-medium">{errors.phoneNumber}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Input
+                  label="Password"
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                />
+                {errors.password && (
+                  <p className="text-red-400 text-xs ml-1 font-medium">{errors.password}</p>
+                )}
+              </div>
+
+              <div className="space-y-2 md:col-span-2">
+                <Input
+                  label="Confirm Password"
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="••••••••"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-400 text-xs ml-1 font-medium">{errors.confirmPassword}</p>
+                )}
+              </div>
             </div>
 
-            <div>
-              <Input
-                label="Email"
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">
-                  {errors.email}
-                </p>
-              )}
-            </div>
+            <Button 
+              text={loading ? "Creating Account..." : "Register Now"} 
+              disabled={loading}
+              className="mt-4"
+            />
 
-            <div>
-              <Input
-                label="Password"
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-              />
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Input
-                label="Confirm Password"
-                type="password"
-                name="confirmPassword"
-                value={form.confirmPassword}
-                onChange={handleChange}
-              />
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-sm">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            <Button text="Create Account" />
-
-            <p className="text-sm text-center">
+            <p className="text-sm text-center text-foreground/60">
               Already have an account?{" "}
-              <Link to="/login" className="text-indigo-600">
-                Login
+              <Link to="/login" className="text-primary font-semibold hover:underline">
+                Sign In
               </Link>
             </p>
-
           </form>
         </CardContent>
       </Card>
-
     </div>
   );
 }

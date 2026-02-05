@@ -1,8 +1,15 @@
-// Reusable button component
-function Button({ text, ...props }) {
+/**
+ * Reusable Button component with modern premium styling.
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.text - Button label text
+ * @param {string} [props.className] - Additional CSS classes
+ * @returns {JSX.Element}
+ */
+function Button({ text, className = "", ...props }) {
   return (
     <button
-      className="bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition px-2 items-center"
+      className={`btn-primary w-full ${className}`}
       {...props}
     >
       {text}
