@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { api } from "../services/api";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import toast from 'react-hot-toast';
 
 import {
   Card,
@@ -50,10 +51,10 @@ function Login() {
       // Update global auth state with user data
       login(res.data.user);
       
-      alert(res.data.message);
+      toast.success(res.data.message);
     } catch (err) {
       // Handle potential login errors
-      alert(err.response?.data?.message || "Login failed");
+      toast.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import { Link } from "react-router-dom";
 import { api } from "../services/api";
+import toast from 'react-hot-toast';
 
 import {
   Card,
@@ -79,9 +80,18 @@ function Signup() {
         password: form.password
       });
 
-      alert(res.data.message);
+      toast.success(res.data.message);
+      
+      // Clear form after successful registration
+      setForm({
+        name: "",
+        email: "",
+        phoneNumber: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (err) {
-      alert(err.response?.data?.message || "Signup failed");
+      toast.error(err.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
     }
