@@ -52,6 +52,9 @@ function Login() {
       login(res.data.user);
       
       toast.success(res.data.message);
+
+      // Clear form after successful login
+      setForm({ email: "", password: "" });
     } catch (err) {
       // Handle potential login errors
       toast.error(err.response?.data?.message || "Login failed");

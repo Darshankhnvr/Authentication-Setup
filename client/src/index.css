@@ -60,12 +60,24 @@
   }
   
   body {
-    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/30;
-    background-image: 
-      radial-gradient(at 0% 0%, oklch(0.15 0.05 250 / 0.3) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, oklch(0.2 0.08 280 / 0.2) 0px, transparent 50%);
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/30 overflow-x-hidden;
+    background: linear-gradient(
+      -45deg, 
+      oklch(0.05 0.01 250), 
+      oklch(0.1 0.05 280), 
+      oklch(0.08 0.03 220), 
+      oklch(0.05 0.01 250)
+    );
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
     min-height: 100vh;
   }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /**
