@@ -39,7 +39,8 @@ A premium, full-stack authentication system built with the MERN stack, featuring
 cd server
 npm install
 ```
-Create a `.env` file in the `server` directory:
+Create a `.env` file in the `server` directory using `.env.example` as reference:
+
 ```env
 MONGODB_URI=your_mongodb_connection_string
 PORT=5000
@@ -82,6 +83,16 @@ npm run dev
 
 ---
 
-## 📄 License
+## � Screenshots
+
+### Login Page
+![Login Page](screenshots/signin.png)
+
+### Signup Page
+![Signup Page](screenshots/signup.png)
+
+---
+
+## �📄 License
 This project is licensed under the MIT License.
 
