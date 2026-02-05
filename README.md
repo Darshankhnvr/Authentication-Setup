@@ -83,7 +83,7 @@ npm run dev
 
 ---
 
-## � Screenshots
+## 📸 Screenshots
 
 ### Login Page
 ![Login Page](screenshots/signin.png)
@@ -93,6 +93,6 @@ npm run dev
 
 ---
 
-## �📄 License
+## 📄 License
 This project is licensed under the MIT License.
 
